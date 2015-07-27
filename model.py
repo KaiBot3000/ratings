@@ -21,9 +21,30 @@ class User(db.Model):
     email = db.Column(db.String(64), nullable=True)
     password = db.Column(db.String(64), nullable=True)
     age = db.Column(db.Integer, nullable=True)
-    zipode = db.Column(db.String(15), nullable=True)
+    zipcode = db.Column(db.String(15), nullable=True)
 
-    
+
+class Movie(db.Model):
+    """Movies available for rating."""
+
+    __tablename__ = "movies"
+
+    movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(64))
+    released_at = db.Column(db.DateTime)
+    imdb_url = db.Column(db.String(128))
+
+
+class Rating(db.Model):
+    """User ratings for movies."""
+
+    __tablename__ = "ratings"
+
+    rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    movie_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+
 
 
 ##############################################################################
