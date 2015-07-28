@@ -2,6 +2,7 @@
 
 from model import User, Rating, Movie, connect_to_db, db
 from server import app
+from datetime import datetime
 
 
 def load_users():
@@ -24,12 +25,15 @@ def load_movies():
 
     for line in f:
         split_line = line.rstrip().split("|")
-        new_movie = Movie(movie_id=split_line[0], title=split_line[1][:-7], released_at=split_line[2], imdb_url=split_line[3])
-        print new_movie.released_at
-        print new_movie
-        db.session.add(new_movie)
 
-    # db.session.commit()
+        if split_line[1] == "unknown":
+            continue
+        else:
+            new_movie = Movie(movie_id=split_line[0], title=split_line[1][:-7], released_at=datetime.strptime(split_line[2], '%d-%b-%Y'), imdb_url=split_line[4])
+            db.session.add(new_movie)
+
+    db.session.commit()
+
 
 
 def load_ratings():
