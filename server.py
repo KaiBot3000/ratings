@@ -24,6 +24,31 @@ def index():
 
     return render_template("homepage.html")
 
+@app.route('/showlogin')
+def show_login():
+
+    return render_template("login.html")
+
+@app.route('/users')
+def user_list():
+    """Show list of users."""
+
+    users = User.query.all()
+    return render_template("user_list.html", users=users)
+
+@app.route('/login', methods=["POST"])
+def login():
+    """Allows user to log in."""
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    session['username'] = username
+    flash("Now Logged In as %s" % session['username'])
+
+
+    return redirect('/')
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
