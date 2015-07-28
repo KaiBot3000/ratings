@@ -44,10 +44,20 @@ def login():
     password = request.form.get("password")
 
     session['username'] = username
-    flash("Now Logged In as %s" % session['username'])
+    flash("Now logged in as %s" % session['username'])
 
 
     return redirect('/')
+
+@app.route('/logout')
+def logout():
+    """Logs user out."""
+
+    del session['username']
+    flash("Logged out")
+
+    return redirect('/')
+
 
 
 if __name__ == "__main__":

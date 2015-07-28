@@ -5,6 +5,10 @@
     </head>
 
     <body>
+        <form action="/logout">
+            <input type="submit" value="Log Out">
+        </form>
+
         <ul>
         {% for messages in get_flashed_messages() %}
             <li>{{ messages }}</li>
