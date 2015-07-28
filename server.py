@@ -40,12 +40,16 @@ def user_list():
 def login():
     """Allows user to log in."""
 
-    username = request.form.get("username")
+    email = request.form.get("email")
     password = request.form.get("password")
 
-    session['username'] = username
-    flash("Now logged in as %s" % session['username'])
+    # check if user is in database
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        # add to database
 
+    session['email'] = email
+    flash("Now logged in as %s" % session['email'])
 
     return redirect('/')
 
@@ -53,7 +57,7 @@ def login():
 def logout():
     """Logs user out."""
 
-    del session['username']
+    del session['email']
     flash("Logged out")
 
     return redirect('/')
