@@ -37,12 +37,14 @@ def login():
     if not user:
         # add to database
         # Later, let's add separate sign-up page to get info
-        new_user = User(email=email, password=password)
-        db.session.add(new_user)
+        user = User(email=email, password=password)
+        db.session.add(user)
         db.session.commit()
 
     session['email'] = email
-    flash("Now logged in as %s" % session['email'])
+    session['id'] = user.user_id
+
+    flash("Now logged in as %s, user id: %s" % (session['email'], session['id']))
 
     return redirect('/')
 
@@ -52,6 +54,7 @@ def logout():
     """Logs user out."""
 
     del session['email']
+    del session['id']
     flash("Logged out")
 
     return redirect('/')
@@ -97,14 +100,26 @@ def movie_details(movie_id):
 
     movie_ratings = db.session.query(Rating.score, Rating.user_id).filter_by(movie_id=movie_id).all()
 
-    # joint_movieratings = db.session.query(Movie.title, Rating.score).join(Rating)
-    
-    # # returns list of users' ratings in tuple format
-    # # [(u'River Wild', 3), (u'Rumble in the Bronx', 4)]
-    # users_ratings = joint_movieratings.filter_by(user_id=user_id).all()
-
-
     return render_template("movie.html", movie=movie, movie_ratings=movie_ratings)
+
+
+@app.route('/submit-rating/<int:movie_id>', methods=['POST'])
+def rate_movie(movie_id):
+
+    score = request.form.get('score')
+
+    check_loggedin = session.get('id', 0)
+    
+    if check_loggedin == 0:
+        flash('You need to log in first!')
+    else:
+        new_score = Rating(movie_id=movie_id, user_id=session['id'], score=score)
+        db.session.add(new_score)
+        db.session.commit()
+        flash('You rated that movie a %s' % score)
+
+    return redirect('/movies/%s' % movie_id)
+
 
 
 if __name__ == "__main__":

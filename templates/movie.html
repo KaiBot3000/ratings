@@ -8,9 +8,21 @@
         <li>Release Date: {{ movie.released_at }}</li>
         <li><a href="{{ movie.imdb_url }}">IMDB</a></li>
     </ul>
-    
+        
+    <form action="/submit-rating/{{ movie.movie_id }}", method='POST'>
+        <label><b>Rate this movie:</b>
+            <input type='radio' name='score' value='1'>1
+            <input type='radio' name='score' value='2'>2
+            <input type='radio' name='score' value='3'>3
+            <input type='radio' name='score' value='4'>4
+            <input type='radio' name='score' value='5'>5
+        </label>
+        <input type='submit'>
+    </form>
 
-    <h2>Movies Ratings</h2>
+
+
+    <h2>Movie Ratings</h2>
     <ul>
         {% for movie_score, user_id in movie_ratings  %}
             <li>
