@@ -34,19 +34,22 @@ def login():
 
     # check if user is in database
     user = User.query.filter_by(email=email).first()
+
     if not user:
-        # add to database
         # Later, let's add separate sign-up page to get info
         user = User(email=email, password=password)
         db.session.add(user)
         db.session.commit()
 
+            # check if password is correct
+    # if user.password != password
+
     session['email'] = email
     session['id'] = user.user_id
 
-    flash("Now logged in as %s, user id: %s" % (session['email'], session['id']))
+    flash("Now logged in as %s" % session['email'])
 
-    return redirect('/')
+    return redirect('/users/%s' % session['id'])
 
 
 @app.route('/logout')
@@ -74,22 +77,24 @@ def user_details(user_id):
 
     user = User.query.get(user_id)
 
-    joint_movieratings = db.session.query(Movie.title, Movie.movie_id, Rating.score).join(Rating)
+    joint_movieratings = db.session.query(Movie.title, 
+                                        Movie.movie_id, 
+                                        Rating.score).join(Rating)
     
     # returns list of users' ratings in tuple format
     # [(u'River Wild', 3), (u'Rumble in the Bronx', 4)]
     users_ratings = joint_movieratings.filter_by(user_id=user_id).order_by(Movie.title).all()
-
 
     return render_template("user.html", user=user, users_ratings=users_ratings)
 
 
 @app.route('/movies')
 def movie_list():
-    """Show list of movies."""
+    """Show alphabetical list of movies."""
 
-    movies = Movie.query.order_by(Movie.title).all()
-    return render_template("movie_list.html", movies=movies)
+    show_movies = Movie.query.order_by(Movie.title).all()
+
+    return render_template("movie_list.html", movies=show_movies)
 
 
 @app.route('/movies/<int:movie_id>')
@@ -108,9 +113,7 @@ def rate_movie(movie_id):
 
     score = request.form.get('score')
 
-    check_loggedin = session.get('id', 0)
-    
-    if check_loggedin == 0:
+    if 'id' not in session:
         flash('You need to log in first!')
     else:
         new_score = Rating(movie_id=movie_id, user_id=session['id'], score=score)
