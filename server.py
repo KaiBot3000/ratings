@@ -24,10 +24,10 @@ def index():
 
     return render_template("homepage.html")
 
-@app.route('/showlogin')
-def show_login():
+# @app.route('/showlogin')
+# def show_login():
 
-    return render_template("login.html")
+#     return render_template("login.html")
 
 @app.route('/users')
 def user_list():
@@ -47,6 +47,10 @@ def login():
     user = User.query.filter_by(email=email).first()
     if not user:
         # add to database
+        # Later, let's add separate sign-up page to get info
+        new_user = User(email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
 
     session['email'] = email
     flash("Now logged in as %s" % session['email'])
@@ -62,6 +66,20 @@ def logout():
 
     return redirect('/')
 
+@app.route('/users/<int:user_id>')
+def user_details(user_id):
+    """Show user profile"""
+    # user_id = 56
+    user = User.query.get(user_id)
+
+    joint_movieratings = db.session.query(Movie.title, Rating.score).join(Rating)
+    
+    # returns list of users' ratings in tuple format
+    # [(u'River Wild', 3), (u'Rumble in the Bronx', 4)]
+    users_ratings = joint_movieratings.filter_by(user_id=user_id).all()
+
+
+    return render_template("user.html", user=user, users_ratings=users_ratings)
 
 
 if __name__ == "__main__":
