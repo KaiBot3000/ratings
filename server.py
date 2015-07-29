@@ -24,10 +24,6 @@ def index():
 
     return render_template("homepage.html")
 
-# @app.route('/showlogin')
-# def show_login():
-
-#     return render_template("login.html")
 
 @app.route('/users')
 def user_list():
@@ -35,6 +31,7 @@ def user_list():
 
     users = User.query.all()
     return render_template("user_list.html", users=users)
+
 
 @app.route('/login', methods=["POST"])
 def login():
@@ -57,6 +54,7 @@ def login():
 
     return redirect('/')
 
+
 @app.route('/logout')
 def logout():
     """Logs user out."""
@@ -66,10 +64,11 @@ def logout():
 
     return redirect('/')
 
+
 @app.route('/users/<int:user_id>')
 def user_details(user_id):
     """Show user profile"""
-    # user_id = 56
+
     user = User.query.get(user_id)
 
     joint_movieratings = db.session.query(Movie.title, Rating.score).join(Rating)
