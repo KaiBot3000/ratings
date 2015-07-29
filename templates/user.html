@@ -8,9 +8,9 @@
 
     <h2>Movies Rated</h2>
     <ul>
-        {% for title, rating in users_ratings  %}
+        {% for title, movie_id, rating in users_ratings  %}
             <li>
-                {{ title }}: {{ rating }}
+                <a href="/movies/{{ movie_id }}">{{ title }}</a>: {{ rating }}
             </li>
         {% endfor %}
     </ul>

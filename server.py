@@ -25,14 +25,6 @@ def index():
     return render_template("homepage.html")
 
 
-@app.route('/users')
-def user_list():
-    """Show list of users."""
-
-    users = User.query.all()
-    return render_template("user_list.html", users=users)
-
-
 @app.route('/login', methods=["POST"])
 def login():
     """Allows user to log in."""
@@ -65,21 +57,53 @@ def logout():
     return redirect('/')
 
 
+@app.route('/users')
+def user_list():
+    """Show list of users."""
+
+    users = User.query.all()
+    return render_template("user_list.html", users=users)
+
+
 @app.route('/users/<int:user_id>')
 def user_details(user_id):
     """Show user profile"""
 
     user = User.query.get(user_id)
 
-    joint_movieratings = db.session.query(Movie.title, Rating.score).join(Rating)
+    joint_movieratings = db.session.query(Movie.title, Movie.movie_id, Rating.score).join(Rating)
     
     # returns list of users' ratings in tuple format
     # [(u'River Wild', 3), (u'Rumble in the Bronx', 4)]
-    users_ratings = joint_movieratings.filter_by(user_id=user_id).all()
+    users_ratings = joint_movieratings.filter_by(user_id=user_id).order_by(Movie.title).all()
 
 
     return render_template("user.html", user=user, users_ratings=users_ratings)
 
+@app.route('/movies')
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.order_by(Movie.title).all()
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route('/movies/<int:movie_id>')
+def movie_details(movie_id):
+    """Show movie details"""
+
+    movie = Movie.query.get(movie_id)
+
+    movie_ratings = db.session.query(Rating.score, Rating.user_id).filter_by(movie_id=movie_id).all()
+
+    # joint_movieratings = db.session.query(Movie.title, Rating.score).join(Rating)
+    
+    # # returns list of users' ratings in tuple format
+    # # [(u'River Wild', 3), (u'Rumble in the Bronx', 4)]
+    # users_ratings = joint_movieratings.filter_by(user_id=user_id).all()
+
+
+    return render_template("movie.html", movie=movie, movie_ratings=movie_ratings)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
