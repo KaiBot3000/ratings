@@ -80,6 +80,7 @@ def user_details(user_id):
 
     return render_template("user.html", user=user, users_ratings=users_ratings)
 
+
 @app.route('/movies')
 def movie_list():
     """Show list of movies."""
@@ -104,6 +105,7 @@ def movie_details(movie_id):
 
 
     return render_template("movie.html", movie=movie, movie_ratings=movie_ratings)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
