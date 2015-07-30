@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Ratings</title>
+        <title>{% block title %}Title{% endblock %}</title>
     </head>
 
     <body>
 
-<!-- toggle whether log in or out appears based on logged in status -->
-<!-- if 'id' not in session, show log out
-    <form>
-                <form action="/logout">
-            <input type="submit" value="Log Out">
-        </form>
- if not, show login -->
         {% if 'id' not in session %}
-
             <form action="/login">
                 <input type="submit" value="Log In or Sign Up">
             </form>
@@ -24,14 +16,11 @@
             </form>
         {% endif %}
 
-
-
         <ul>
         {% for messages in get_flashed_messages() %}
             <li>{{ messages }}</li>
         {% endfor %}
         </ul>
-
 
         Ratings
         <hr>
