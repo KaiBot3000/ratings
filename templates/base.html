@@ -13,13 +13,16 @@
             <input type="submit" value="Log Out">
         </form>
  if not, show login -->
+        {% if 'id' not in session %}
 
-        <form action="/login">
-            <input type="submit" value="Log In or Sign Up">
-        </form>
-        <form action="/logout">
-            <input type="submit" value="Log Out">
-        </form>
+            <form action="/login">
+                <input type="submit" value="Log In or Sign Up">
+            </form>
+        {% else %}
+            <form action="/logout">
+                <input type="submit" value="Log Out">
+            </form>
+        {% endif %}
 
 
 

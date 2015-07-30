@@ -42,14 +42,10 @@ def login():
     # check if user is in database
     user = User.query.filter_by(email=email).first()
 
-    # if not user:
-    #     # Later, let's add separate sign-up page to get info
-    #     user = User(email=email, password=password)
-    #     db.session.add(user)
-    #     db.session.commit()
-
-            # check if password is correct
-    # if user.password != password
+    # check if password is correct
+    if user.password != password:
+        flash('Incorrect password, please try again.')
+        return redirect('/login')
 
     session['email'] = email
     session['id'] = user.user_id
