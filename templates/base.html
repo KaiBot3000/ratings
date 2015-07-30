@@ -7,17 +7,16 @@
     <body>
 
 <!-- toggle whether log in or out appears based on logged in status -->
-        <h2>Log In!</h2>
-        <form action='/login' method='POST'>
-            <label>Email:
-                <input type='text' name='email'>
-            </label>
-            <label>Password:
-                <input type='password' name='password'>
-            </label> <br>
-            <input type='submit' value="Log In">
+<!-- if 'id' not in session, show log out
+    <form>
+                <form action="/logout">
+            <input type="submit" value="Log Out">
         </form>
-        <br>
+ if not, show login -->
+
+        <form action="/login">
+            <input type="submit" value="Log In or Sign Up">
+        </form>
         <form action="/logout">
             <input type="submit" value="Log Out">
         </form>

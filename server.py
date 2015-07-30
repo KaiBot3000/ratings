@@ -25,7 +25,14 @@ def index():
     return render_template("homepage.html")
 
 
-@app.route('/login', methods=["POST"])
+@app.route('/login')
+def show_login():
+    """Display form for user to log in or sign up."""
+
+    return render_template('login.html')
+
+
+@app.route('/logged-in', methods=["POST"])
 def login():
     """Allows user to log in."""
 
@@ -35,14 +42,36 @@ def login():
     # check if user is in database
     user = User.query.filter_by(email=email).first()
 
-    if not user:
-        # Later, let's add separate sign-up page to get info
-        user = User(email=email, password=password)
-        db.session.add(user)
-        db.session.commit()
+    # if not user:
+    #     # Later, let's add separate sign-up page to get info
+    #     user = User(email=email, password=password)
+    #     db.session.add(user)
+    #     db.session.commit()
 
             # check if password is correct
     # if user.password != password
+
+    session['email'] = email
+    session['id'] = user.user_id
+
+    flash("Now logged in as %s" % session['email'])
+
+    return redirect('/users/%s' % session['id'])
+
+
+@app.route('/add-user', methods=['POST'])
+def add_user():
+    """Signs user up, adds to database"""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+    age = request.form.get("age")
+    zipcode = request.form.get("zipcode")
+
+
+    user = User(email=email, password=password, age=age, zipcode=zipcode)
+    db.session.add(user)
+    db.session.commit()
 
     session['email'] = email
     session['id'] = user.user_id
