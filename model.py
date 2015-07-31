@@ -70,37 +70,65 @@ class User(db.Model):
 
         return similarity
 
-    def similar_user(self, movie_id):
+    def predict_rating(self, movie):
+        """ Predict the user's rating based on other users"""
 
-        # m = Movie.query.get(movie_id)
+        other_ratings = movie.ratings
 
-        # list of all ratings Toy Story has received
-        other_ratings = Rating.query.filter_by(movie_id=movie_id).all()
+        similarities = []
 
-        # list of all user objects that have rated Toy Story
-        other_users = [r.user for r in other_ratings]
+        for r in other_ratings:
+            similarities.append((self.find_similarity(r.user), r))
+
+        similarities.sort(reverse=True)
+
+        numerator = []
+        denominator = []
+
+        for sim, r in similarities:
+            numerator.append(r.score * sim)
+        numerator = sum(numerator)
+
+        for sim, r in similarities:
+            denominator.append(sim)
+
+        denominator = sum(denominator)
+
+        predicted_rating = numerator / denominator
+
+        return round(predicted_rating, 2)
+
+    # def similar_user(self, movie_id):
+
+    #     # m = Movie.query.get(movie_id)
+
+    #     # list of all ratings Toy Story has received
+    #     other_ratings = Rating.query.filter_by(movie_id=movie_id).all()
+
+    #     # list of all user objects that have rated Toy Story
+    #     other_users = [r.user for r in other_ratings]
         
-        similarity_scores = []
-        for user in other_users:
-            result = self.find_similarity(user)
-            similarity_scores.append((result, user.user_id))
+    #     similarity_scores = []
+    #     for user in other_users:
+    #         result = self.find_similarity(user)
+    #         similarity_scores.append((result, user.user_id))
 
-        sorted_similarity_scores = sorted(similarity_scores, reverse=True)
+    #     sorted_similarity_scores = sorted(similarity_scores, reverse=True)
 
-        similar_user = sorted_similarity_scores[0]
+    #     similar_user = sorted_similarity_scores[0]
 
-        return similar_user
+    #     return similar_user
 
-    def predict_score(self, movie_id):
-        """Given a user and movie, predict user's rating."""
-        sim, top_user = self.similar_user(movie_id)
-        # gives us tuple of similarity, user_id, we unpack it
+    # def predict_score(self, movie_id):
+    #     """Given a user and movie, predict user's rating."""
+    #     sim, top_user = self.similar_user(movie_id)
+    #     # gives us tuple of similarity, user_id, we unpack it
 
-        top_user_score = Rating.query.filter_by(movie_id=movie_id, user_id=top_user).one()
+    #     top_user_score = Rating.query.filter_by(movie_id=movie_id, user_id=top_user).one()
 
-        prediction = sim * top_user_score.score
+    #     prediction = sim * top_user_score.score
 
-        return prediction 
+    #     return prediction 
 
 
 class Movie(db.Model):
