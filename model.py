@@ -78,15 +78,27 @@ class User(db.Model):
         similarities = []
 
         for r in other_ratings:
-            similarities.append((self.find_similarity(r.user), r))
+            sim = self.find_similarity(r.user)
+            if sim > 0:
+                similarities.append((sim, r))
+
+        if not similarities:
+            return None
 
         similarities.sort(reverse=True)
 
         numerator = []
         denominator = []
 
+        # To throw out negative values, we could loop through similarities
+            # find index of first negative number
+                # make similarities equal to range until that index
+        # This would be faster an more efficient, since the list is already ordered 
+        # from positive to negative.
+
         for sim, r in similarities:
             numerator.append(r.score * sim)
+        
         numerator = sum(numerator)
 
         for sim, r in similarities:
