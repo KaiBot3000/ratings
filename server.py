@@ -130,7 +130,13 @@ def movie_details(movie_id):
 
     movie_ratings = db.session.query(Rating.score, Rating.user_id).filter_by(movie_id=movie_id).all()
 
-    return render_template("movie.html", movie=movie, movie_ratings=movie_ratings)
+    ratings = [score for score, user in movie_ratings]
+
+    avg_rating = float(sum(ratings) / len(ratings))
+
+    return render_template("movie.html", movie=movie, 
+                                        movie_ratings=movie_ratings, 
+                                        avg_rating=avg_rating)
 
 
 @app.route('/submit-rating/<int:movie_id>', methods=['POST'])
