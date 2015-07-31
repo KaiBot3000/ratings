@@ -70,14 +70,26 @@ class User(db.Model):
 
         return similarity
 
+    def similar_user(self, movie_id):
 
-        #m = Movie.query.get(movie_id)
-        # # list of all users that have rated Toy Story
-        # other_users = [r.user for r in other_ratings]
+        # m = Movie.query.get(movie_id)
+
         # list of all ratings Toy Story has received
-        #other_ratings = Rating.query.filter_by(movie_id=m.movie_id).all()
+        other_ratings = Rating.query.filter_by(movie_id=movie_id).all()
 
+        # list of all user objects that have rated Toy Story
+        other_users = [r.user for r in other_ratings]
+        
+        similarity_scores = []
+        for user in other_users:
+            result = self.find_similarity(user)
+            similarity_scores.append((result, user.user_id))
 
+        sorted_similarity_scores = sorted(similarity_scores, reverse=True)
+
+        similar_user = sorted_similarity_scores[0]
+
+        return similar_user
 
 class Movie(db.Model):
     """Movies available for rating."""

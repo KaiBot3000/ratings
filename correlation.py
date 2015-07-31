@@ -32,5 +32,3 @@ def pearson(pairs):
         return 0
 
     return numerator / denominator
-
-
