@@ -91,6 +91,18 @@ class User(db.Model):
 
         return similar_user
 
+    def predict_score(self, movie_id):
+        """Given a user and movie, predict user's rating."""
+        sim, top_user = self.similar_user(movie_id)
+        # gives us tuple of similarity, user_id, we unpack it
+
+        top_user_score = Rating.query.filter_by(movie_id=movie_id, user_id=top_user).one()
+
+        prediction = sim * top_user_score.score
+
+        return prediction 
+
+
 class Movie(db.Model):
     """Movies available for rating."""
 
