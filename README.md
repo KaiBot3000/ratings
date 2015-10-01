@@ -1,7 +1,7 @@
 ![image](/static/images/search_screenshot.png)
 # Movie Ratings
 
-Movie ratings uses machine learning to predict a user's rating of a movie based on past ratings and similar users, calculated usig Pearson Correlation. This is a (mostly finished) project for Hackbright Academy, and pair-programmed with [Noelle Daly](http://noelledaley.github.io/).
+Movie ratings uses machine learning to predict a user's rating of a movie based on past ratings and similar users, calculated using Pearson Correlation. This is a (mostly finished) project for Hackbright Academy, and pair-programmed with [Noelle Daly](http://noelledaley.github.io/).
 Users can...
   - Log in/out using flask sessions
   - Submit new movie ratings
